@@ -1,0 +1,21 @@
+
+
+class VAOVertices {
+public:
+
+// create a VAO
+
+// create a single VBO
+
+// link to VAO
+
+private:
+
+}
+
+class VAOVerticesAndInDices {
+public:
+
+private:
+
+}
