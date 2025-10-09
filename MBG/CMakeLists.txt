@@ -5,7 +5,7 @@
 find_package(Catch2 CONFIG REQUIRED)
 
 # Add source to this project's executable.
-add_executable (MBG "Tests/tests.cpp" )
+add_executable (MBG "Tests/tests.cpp" "MBG/OpenGL/Window.cpp")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET MBG PROPERTY CXX_STANDARD 20)
@@ -25,6 +25,7 @@ target_link_libraries(MBG PRIVATE glad::glad)
 
 find_package(stb REQUIRED)
 target_include_directories(MBG PRIVATE ${Stb_INCLUDE_DIR})
+
 
 # Link Catch2
 target_link_libraries(MBG PRIVATE Catch2::Catch2WithMain)
