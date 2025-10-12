@@ -1,0 +1,68 @@
+#pragma once
+
+#include "Nodes.hpp"
+
+class FramGraph
+{
+public:
+	FramGraph();
+	~FramGraph();
+
+	/*
+		These are all of the memory syncronization nodes
+	*/
+	addMemoryNode(NodeSend node);
+	addMemoryNode(NodeRead node);
+
+	/*
+		These are all of the rendering nodes
+	*/
+	addRenderPassNode(NodeRenderPass node);
+
+	/*
+		This is the most complex function of the entire project!
+		It takes all of the data and information that we have been gathering this whole time
+		and compiles the instructions into raw openGL code
+
+		Since it is only openGL the only optimisation we do is remove dupicate
+		binding operations
+
+		Render Pass
+		1.) When there is a render pass we must bind all of the required resources
+		2.) Then run the correct draw command with the correct draw properties
+		
+		Memory Sync
+		1.) Bind the resource
+		2.) Send the data
+
+		Finally once we have linked all of the nodes in openGL
+		we compile them inside of a vector and the deduplicate 
+		the extra binding instruction -- this is technicially
+		opptional so we will save this to the last thing we do
+	*/
+	void compile();
+
+	/*
+		Now we just itterate through that vector we created 
+		and run each of the openGL commands!
+	*/
+	void run();
+	
+	/*
+		This function renders all of the fram graph info to the screen
+		with there timing and structure. When the frame graph updates so
+		does the UI. This should use ImGUI to render everything to the screen
+	*/
+	void renderDebugInfo();
+
+private:
+
+};
+
+FramGraph::FramGraph()
+{
+}
+
+FramGraph::~FramGraph()
+{
+}

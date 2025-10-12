@@ -4,8 +4,44 @@
 #include "../MBG/OpenGL/Window.hpp"
 
 TEST_CASE("Simple Triangle") {
-
     std::cout << "Hello TESTS!" << std::endl;
+
+	// This is what a triangle drawing application will look like
+
+	//  Window example_window(800, 600);
+	//  
+	//  struct Vertex {
+	//  	float x;
+	//  	float y;
+	//  };
+	//  
+	//  Vertex data[] = {
+	//  	Vertex(0.0, 0.0),
+	//  	Vertex(0.5, 0.5),
+	//  	Vertex(-0.5, -0.5),
+	//  };
+	//  
+	//  VertexBuffer vertex_buffer(sizeof(data), sizeof(Vertex), "vertex_buffer", data);
+	//  vertex_buffer.addFloat(2); // states that there are 2 floats
+	//  // add more if needed
+	//  vertex_buffer.link();
+	//  
+	//  RenderPass main();
+	//  main.memory(vertex_buffer);
+	//  main.addVertexShader("C:\");
+	//  main.addFragmentShader();
+	//  main.link();
+	//  
+	//  
+	//  
+	//  while (!example_window.isClosed()) {
+	//	FrameGraph graph;
+	//		graph.RenderPassNode({
+	//  	&main
+	//  });
+	//  graph.compile();
+	//  	graph.run();
+	//  }
 
     REQUIRE(1 + 1 == 2);
 }
