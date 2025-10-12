@@ -5,16 +5,164 @@
 //	This class creates a vertex buffer and defines its structure
 //------------------------------------------------------------
 
-class VertexBuffer {
+#include <cassert>
+#include <glad/glad.h>
+#include <iostream>
+#include <string>
+#include <vector>
+
+class VertexBuffer
+{
 public:
-	VertexBuffer(size_t buffer_size, size_t vertex_size, std::string = "vertex_buffer", void* data = nullptr) {
+	VertexBuffer(GLint buffer_size, std::string buffer_name = "vertex_buffer", void* data = nullptr, GLenum buffer_usage = GL_STATIC_DRAW)
+		: m_buffer_size(buffer_size)
+		, m_buffer_name(buffer_name)
+		, m_total_attribute_count(0)
+		, m_vertex_array_object(0)
+		, m_vertex_buffer_object(0)
+		, m_stride(0)
+	{
+		assert(buffer_size > 0);
 
+		glGenVertexArrays(1, &m_vertex_array_object);
+		glBindVertexArray(m_vertex_array_object);
+	
+		glGenBuffers(1, &m_vertex_buffer_object);
+		glBindBuffer(GL_ARRAY_BUFFER, m_vertex_buffer_object);
+		glBufferData(GL_ARRAY_BUFFER, buffer_size, data, buffer_usage);
+		
+		glBindVertexArray(0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+		assert(m_vertex_buffer_object != 0);
+		assert(m_vertex_array_object != 0);
 	}
 
-	~VertexBuffer() {
+	void BeginAttrib()
+	{
+		assert(m_vertex_array_object != 0);
+		glBindVertexArray(m_vertex_array_object);
 
+		for (GLuint i = 0; i < m_total_attribute_count; ++i)
+		{
+			glDisableVertexAttribArray(i);
+		}
+
+		m_total_attribute_count = 0;
+		m_stride = 0;
+		assert(m_total_attribute_count == 0);
+		assert(m_stride == 0);
+
+		const unsigned int attribute_size_count = m_attribute_count.size();
+		const unsigned int attribute_type_count = m_attribute_type.size();
+		const unsigned int attribute_pointer_count = m_attribute_pointer.size();
+		assert(attribute_size_count == 0);
+		assert(attribute_type_count == 0);
+		assert(attribute_pointer_count == 0);
+
+		glBindVertexArray(0);
 	}
+
+	void EndAttrib()
+	{
+		assert(m_vertex_array_object != 0);
+
+		glBindVertexArray(m_vertex_array_object);
+		glBindBuffer(GL_ARRAY_BUFFER, m_vertex_buffer_object);
+
+		for (GLuint attribute_index = 0; attribute_index < m_total_attribute_count; ++attribute_index)
+		{
+			glEnableVertexAttribArray(attribute_index);
+			glVertexAttribPointer(attribute_index, m_attribute_count[attribute_index], m_attribute_type[attribute_index], GL_FALSE, m_stride, reinterpret_cast<void*>(m_attribute_pointer[attribute_index]));
+#ifdef _DEBUG
+			std::cerr << "VertexBuffer::EndAttrib(): glVertexAttribPointer(" << attribute_index << ", " << m_attribute_count[attribute_index] << ", " << m_attribute_type[attribute_index] << ", GL_FALSE, " << m_stride << ", reinterpret_cast<void*>(" << m_attribute_pointer[attribute_index] << "));" << std::endl;
+#endif
+		}
+
+		m_attribute_count.clear();
+		m_attribute_type.clear();
+		m_attribute_pointer.clear();
+
+		const unsigned int attribute_size_count = m_attribute_count.size();
+		const unsigned int attribute_type_count = m_attribute_type.size();
+		const unsigned int attribute_pointer_count = m_attribute_pointer.size();
+		assert(attribute_size_count == 0);
+		assert(attribute_type_count == 0);
+		assert(attribute_pointer_count == 0);
+
+		glBindVertexArray(0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+	}
+
+	void AddFloat(GLuint count)
+	{
+		assert(count > 0);
+
+		m_attribute_count.push_back(count);
+		m_attribute_type.push_back(GL_FLOAT);
+		m_attribute_pointer.push_back(m_stride);
+		m_stride += sizeof(GLfloat) * count;
+
+		++m_total_attribute_count;
+
+		const int attribute_size_count = m_attribute_count.size();
+		const int attribute_type_count = m_attribute_type.size();
+		const int attribute_pointer_count = m_attribute_pointer.size();
+		assert(attribute_size_count == m_total_attribute_count);
+		assert(attribute_size_count == attribute_type_count);
+		assert(attribute_size_count == attribute_pointer_count);
+	}
+
+	~VertexBuffer()
+	{
+		glDeleteBuffers(1, &m_vertex_buffer_object);
+		glDeleteVertexArrays(1, &m_vertex_array_object);
+	}
+
+	inline GLint GetBufferSize() const
+	{
+		return m_buffer_size;
+	}
+
+	inline const std::string& GetBufferName() const
+	{
+		return m_buffer_name;
+	}
+
+	inline void Bind() const
+	{
+		assert(m_vertex_array_object != 0);
+		glBindVertexArray(m_vertex_array_object);
+	}
+
+	/*
+	inline GLuint GetVBOIndex() const
+	{
+		return m_vertex_buffer_object;
+	}
+
+	inline GLsizei GetStride() const
+	{
+		return m_stride;
+	}
+
+	inline GLuint GetVAOIndex() const
+	{
+		return m_vertex_array_object;
+	}
+	*/
 
 private:
 
+	GLint m_buffer_size;
+	GLuint m_vertex_buffer_object;
+	std::string m_buffer_name;
+
+	GLuint m_vertex_array_object;
+	GLsizei m_stride;
+
+	GLuint m_total_attribute_count;
+	std::vector<GLint> m_attribute_count;
+	std::vector<GLenum> m_attribute_type;
+	std::vector<GLuint> m_attribute_pointer;
 };
