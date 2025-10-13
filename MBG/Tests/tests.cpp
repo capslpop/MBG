@@ -73,7 +73,9 @@ static GLuint get_shader_program_from_file(const char* vertex_shader_source_file
 		current_size_vertex_shader_source_code = new_size_vertex_shader_source_code;
 		max_size_vertex_shader_source_code = new_size_vertex_shader_source_code + 4096;
 	}
+#ifdef _DEBUG
 	fprintf(stderr, "get_shader_program_from_file(const char*, const char*): <GL_VERTEX_SHADER> %s:\n%s\n", vertex_shader_source_file_name, vertex_shader_source_code);
+#endif
 
 	fragment_shader_source_code = (char*)malloc(max_size_fragment_shader_source_code);
 
@@ -99,7 +101,9 @@ static GLuint get_shader_program_from_file(const char* vertex_shader_source_file
 		current_size_fragment_shader_source_code = new_size_fragment_shader_source_code;
 		max_size_fragment_shader_source_code = new_size_fragment_shader_source_code + 4096;
 	}
+#ifdef _DEBUG
 	fprintf(stderr, "get_shader_program_from_file(const char*, const char*): <GL_FRAGMENT_SHADER> %s:\n%s\n", fragment_shader_source_file_name, fragment_shader_source_code);
+#endif
 
 	vertex_shader_object = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vertex_shader_object, 1, &vertex_shader_source_code, nullptr);
@@ -225,6 +229,10 @@ TEST_CASE("Simple Window") {
 	};
 
 	VertexBuffer triangle_vertex_buffer(sizeof(data_triangle), "triangleVBO", data_triangle, GL_STATIC_DRAW);
+	triangle_vertex_buffer.BeginAttrib();
+	triangle_vertex_buffer.AddFloat(3);
+	triangle_vertex_buffer.AddFloat(3);
+	triangle_vertex_buffer.EndAttrib();
 	triangle_vertex_buffer.BeginAttrib();
 	triangle_vertex_buffer.AddFloat(3);
 	triangle_vertex_buffer.AddFloat(3);

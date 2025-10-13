@@ -38,6 +38,9 @@ public:
 		assert(m_vertex_array_object != 0);
 	}
 
+	VertexBuffer(const VertexBuffer& other) = delete;
+	VertexBuffer& operator=(const VertexBuffer& other) = delete;
+
 	void BeginAttrib()
 	{
 		assert(m_vertex_array_object != 0);
@@ -53,12 +56,14 @@ public:
 		assert(m_total_attribute_count == 0);
 		assert(m_stride == 0);
 
+#ifdef _DEBUG
 		const unsigned int attribute_size_count = m_attribute_count.size();
 		const unsigned int attribute_type_count = m_attribute_type.size();
 		const unsigned int attribute_pointer_count = m_attribute_pointer.size();
 		assert(attribute_size_count == 0);
 		assert(attribute_type_count == 0);
 		assert(attribute_pointer_count == 0);
+#endif
 
 		glBindVertexArray(0);
 	}
@@ -83,12 +88,14 @@ public:
 		m_attribute_type.clear();
 		m_attribute_pointer.clear();
 
+#ifdef _DEBUG
 		const unsigned int attribute_size_count = m_attribute_count.size();
 		const unsigned int attribute_type_count = m_attribute_type.size();
 		const unsigned int attribute_pointer_count = m_attribute_pointer.size();
 		assert(attribute_size_count == 0);
 		assert(attribute_type_count == 0);
 		assert(attribute_pointer_count == 0);
+#endif
 
 		glBindVertexArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -105,12 +112,14 @@ public:
 
 		++m_total_attribute_count;
 
+#ifdef _DEBUG
 		const int attribute_size_count = m_attribute_count.size();
 		const int attribute_type_count = m_attribute_type.size();
 		const int attribute_pointer_count = m_attribute_pointer.size();
 		assert(attribute_size_count == m_total_attribute_count);
 		assert(attribute_size_count == attribute_type_count);
 		assert(attribute_size_count == attribute_pointer_count);
+#endif
 	}
 
 	~VertexBuffer()
