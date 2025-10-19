@@ -222,7 +222,7 @@ TEST_CASE("Simple Window") {
 
 	Window example_window(800, 600, "Somebody Touched My Spaghet On The Moon");
 
-	GLfloat data_triangle[] = {
+	GLfloat vertices_triangle[] = {
 		// vertices			// colors
 		-0.5, 0.5, 0.0,		1.0f, 0.0f, 0.0f,
 		0.5, 0.5, 0.0,		0.0f, 1.0f, 0.0f,
@@ -230,31 +230,30 @@ TEST_CASE("Simple Window") {
 		0.5, -0.5, 0.0,		0.8f, 0.6f, 0.4f
 	};
 
-	VertexBuffer triangle_vertex_buffer(sizeof(data_triangle), "triangleVBO", data_triangle, GL_STATIC_DRAW);
-	triangle_vertex_buffer.BeginAttrib();
-	triangle_vertex_buffer.AddFloat(3);
-	triangle_vertex_buffer.AddFloat(3);
-	triangle_vertex_buffer.EndAttrib();
-	triangle_vertex_buffer.BeginAttrib();
-	triangle_vertex_buffer.AddFloat(3);
-	triangle_vertex_buffer.EndAttrib();
-	triangle_vertex_buffer.BeginAttrib();
-	triangle_vertex_buffer.AddFloat(3);
-	triangle_vertex_buffer.AddFloat(3);
-	triangle_vertex_buffer.EndAttrib();
-	triangle_vertex_buffer.BeginAttrib();
-	triangle_vertex_buffer.AddFloat(3);
-	triangle_vertex_buffer.EndAttrib();
-	triangle_vertex_buffer.BeginAttrib();
-	triangle_vertex_buffer.AddFloat(3);
-	triangle_vertex_buffer.AddFloat(3);
-	triangle_vertex_buffer.EndAttrib();
-
 	GLuint indices_triangle[] = {
 		0, 1, 2,
 		1, 2, 3
 	};
-	VertexElementBuffer triangle_element_buffer(triangle_vertex_buffer, indices_triangle, sizeof(indices_triangle), "triangleEBO");
+
+	VertexElementBuffer triangle_element_buffer(vertices_triangle, sizeof(vertices_triangle), indices_triangle, sizeof(indices_triangle), "triangleEBO", GL_STATIC_DRAW);	
+	triangle_element_buffer.BeginAttrib();
+	triangle_element_buffer.AddFloat(3);
+	triangle_element_buffer.AddFloat(3);
+	triangle_element_buffer.EndAttrib();
+	triangle_element_buffer.BeginAttrib();
+	triangle_element_buffer.AddFloat(3);
+	triangle_element_buffer.EndAttrib();
+	triangle_element_buffer.BeginAttrib();
+	triangle_element_buffer.AddFloat(3);
+	triangle_element_buffer.AddFloat(3);
+	triangle_element_buffer.EndAttrib();
+	triangle_element_buffer.BeginAttrib();
+	triangle_element_buffer.AddFloat(3);
+	triangle_element_buffer.EndAttrib();
+	triangle_element_buffer.BeginAttrib();
+	triangle_element_buffer.AddFloat(3);
+	triangle_element_buffer.AddFloat(3);
+	triangle_element_buffer.EndAttrib();
 
 	GLuint program_draw_triangle = get_shader_program_from_file("Shaders/vert_triangle.glsl", "Shaders/frag_triangle.glsl");
 

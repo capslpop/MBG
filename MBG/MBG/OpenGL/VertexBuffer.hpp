@@ -22,7 +22,7 @@ public:
 		, m_vertex_array_object(0)
 		, m_vertex_buffer_object(0)
 		, m_stride(0)
-		, Usage(buffer_usage)
+		, m_usage(buffer_usage)
 	{
 		assert(buffer_size > 0);
 		assert(data != nullptr);
@@ -130,13 +130,13 @@ public:
 #endif
 	}
 
-	~VertexBuffer()
+	virtual ~VertexBuffer()
 	{
 		glDeleteBuffers(1, &m_vertex_buffer_object);
 		glDeleteVertexArrays(1, &m_vertex_array_object);
 	}
 
-	inline GLsizeiptr GetBufferSize() const
+	inline GLsizeiptr GetVertexBufferSize() const
 	{
 		return m_buffer_size;
 	}
@@ -165,15 +165,15 @@ public:
 	*/
 
 	const std::string Name;
-	const GLenum Usage;
 
-private:
-
+protected:
 	GLsizeiptr m_buffer_size;
 	GLuint m_vertex_buffer_object;
 
 	GLuint m_vertex_array_object;
 	GLsizei m_stride;
+
+	const GLenum m_usage;
 
 	GLuint m_total_attribute_count;
 	std::vector<GLint> m_attribute_count;
