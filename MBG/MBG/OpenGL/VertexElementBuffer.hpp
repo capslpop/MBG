@@ -35,7 +35,7 @@ public:
 	~VertexElementBuffer() {
 		glDeleteBuffers(1, &m_element_buffer_object);
 #ifdef _DEBUG
-		std::cerr << "VertexElementBuffer::~VertexElementBuffer: <Reminder> " << Name << "did NOT delete " << m_vertex_buffer.Name << "'s vertex array object." << std::endl;
+		std::cerr << "VertexElementBuffer::~VertexElementBuffer: <Reminder> " << Name << " did NOT delete " << m_vertex_buffer.Name << "'s vertex array object." << std::endl;
 #endif	
 	}
 
