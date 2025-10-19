@@ -141,12 +141,7 @@ public:
 		return m_buffer_size;
 	}
 
-	inline const std::string& GetBufferName() const
-	{
-		return Name;
-	}
-
-	inline void Bind() const
+	inline void Bind()
 	{
 		assert(m_vertex_array_object != 0);
 		glBindVertexArray(m_vertex_array_object);

@@ -250,7 +250,10 @@ TEST_CASE("Simple Window") {
 	triangle_vertex_buffer.AddFloat(3);
 	triangle_vertex_buffer.EndAttrib();
 
-	GLuint indices_triangle[] = { 0, 1, 2, 1, 2, 3 };
+	GLuint indices_triangle[] = {
+		0, 1, 2,
+		1, 2, 3
+	};
 	VertexElementBuffer triangle_element_buffer(triangle_vertex_buffer, indices_triangle, sizeof(indices_triangle), "triangleEBO");
 
 	GLuint program_draw_triangle = get_shader_program_from_file("Shaders/vert_triangle.glsl", "Shaders/frag_triangle.glsl");
@@ -267,7 +270,8 @@ TEST_CASE("Simple Window") {
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		glUseProgram(program_draw_triangle);
-		triangle_vertex_buffer.Bind();
+		//triangle_vertex_buffer.Bind();
+		triangle_element_buffer.Bind();
 		// glDrawArrays(GL_TRIANGLES, 0, 3);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
