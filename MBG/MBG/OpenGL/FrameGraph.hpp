@@ -2,11 +2,11 @@
 
 #include "Nodes.hpp"
 
-class FramGraph
+class FrameGraph
 {
 public:
-	FramGraph();
-	~FramGraph();
+	FrameGraph();
+	~FrameGraph();
 
 	/*
 		These are all of the memory syncronization nodes
@@ -59,10 +59,10 @@ private:
 
 };
 
-FramGraph::FramGraph()
+FrameGraph::FrameGraph()
 {
 }
 
-FramGraph::~FramGraph()
+FrameGraph::~FrameGraph()
 {
 }
