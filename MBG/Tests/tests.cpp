@@ -3,6 +3,7 @@
 
 #include "../MBG/OpenGL/Window.hpp"
 #include "../MBG/OpenGL/VertexBuffer.hpp"
+#include "../MBG/OpenGL/VertexElementBuffer.hpp"
 
 #define _CRT_SECURE_NO_WARNINGS
 #include <cstdio>
@@ -223,9 +224,10 @@ TEST_CASE("Simple Window") {
 
 	GLfloat data_triangle[] = {
 		// vertices			// colors
-		0.0f, 0.5f, 0.0f,	1.0f, 0.0f, 0.0f,
-		-0.5f, -0.5f, 0.0f,	0.0f, 1.0f, 0.0f,
-		0.5f, -0.5f, 0.0f,	0.0f, 0.0f, 1.0f
+		-0.5, 0.5, 0.0,		1.0f, 0.0f, 0.0f,
+		0.5, 0.5, 0.0,		0.0f, 1.0f, 0.0f,
+		-0.5, -0.5, 0.0,	0.0f, 0.0f, 1.0f,
+		0.5, -0.5, 0.0,		0.8f, 0.6f, 0.4f
 	};
 
 	VertexBuffer triangle_vertex_buffer(sizeof(data_triangle), "triangleVBO", data_triangle, GL_STATIC_DRAW);
@@ -235,8 +237,21 @@ TEST_CASE("Simple Window") {
 	triangle_vertex_buffer.EndAttrib();
 	triangle_vertex_buffer.BeginAttrib();
 	triangle_vertex_buffer.AddFloat(3);
+	triangle_vertex_buffer.EndAttrib();
+	triangle_vertex_buffer.BeginAttrib();
+	triangle_vertex_buffer.AddFloat(3);
 	triangle_vertex_buffer.AddFloat(3);
 	triangle_vertex_buffer.EndAttrib();
+	triangle_vertex_buffer.BeginAttrib();
+	triangle_vertex_buffer.AddFloat(3);
+	triangle_vertex_buffer.EndAttrib();
+	triangle_vertex_buffer.BeginAttrib();
+	triangle_vertex_buffer.AddFloat(3);
+	triangle_vertex_buffer.AddFloat(3);
+	triangle_vertex_buffer.EndAttrib();
+
+	GLuint indices_triangle[] = { 0, 1, 2, 1, 2, 3 };
+	VertexElementBuffer triangle_element_buffer(triangle_vertex_buffer, indices_triangle, sizeof(indices_triangle), "triangleEBO");
 
 	GLuint program_draw_triangle = get_shader_program_from_file("Shaders/vert_triangle.glsl", "Shaders/frag_triangle.glsl");
 
@@ -253,7 +268,8 @@ TEST_CASE("Simple Window") {
 
 		glUseProgram(program_draw_triangle);
 		triangle_vertex_buffer.Bind();
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		// glDrawArrays(GL_TRIANGLES, 0, 3);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
 		example_window.pullAndSwapBuffers();
 	}

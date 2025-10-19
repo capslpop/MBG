@@ -1,3 +1,4 @@
+
 #pragma once
 
 //------------------------------------------------------------
@@ -14,15 +15,17 @@
 class VertexBuffer
 {
 public:
-	VertexBuffer(GLint buffer_size, std::string buffer_name = "vertex_buffer", void* data = nullptr, GLenum buffer_usage = GL_STATIC_DRAW)
+	VertexBuffer(GLsizeiptr buffer_size, std::string buffer_name = "vertex_buffer", void* data = nullptr, GLenum buffer_usage = GL_STATIC_DRAW)
 		: m_buffer_size(buffer_size)
-		, m_buffer_name(buffer_name)
+		, Name(buffer_name)
 		, m_total_attribute_count(0)
 		, m_vertex_array_object(0)
 		, m_vertex_buffer_object(0)
 		, m_stride(0)
+		, Usage(buffer_usage)
 	{
 		assert(buffer_size > 0);
+		assert(data != nullptr);
 
 		glGenVertexArrays(1, &m_vertex_array_object);
 		glBindVertexArray(m_vertex_array_object);
@@ -39,6 +42,7 @@ public:
 	}
 
 	VertexBuffer(const VertexBuffer& other) = delete;
+
 	VertexBuffer& operator=(const VertexBuffer& other) = delete;
 
 	void BeginAttrib()
@@ -57,9 +61,9 @@ public:
 		assert(m_stride == 0);
 
 #ifdef _DEBUG
-		const unsigned int attribute_size_count = m_attribute_count.size();
-		const unsigned int attribute_type_count = m_attribute_type.size();
-		const unsigned int attribute_pointer_count = m_attribute_pointer.size();
+		const size_t attribute_size_count = m_attribute_count.size();
+		const size_t attribute_type_count = m_attribute_type.size();
+		const size_t attribute_pointer_count = m_attribute_pointer.size();
 		assert(attribute_size_count == 0);
 		assert(attribute_type_count == 0);
 		assert(attribute_pointer_count == 0);
@@ -75,6 +79,8 @@ public:
 		glBindVertexArray(m_vertex_array_object);
 		glBindBuffer(GL_ARRAY_BUFFER, m_vertex_buffer_object);
 
+		std::cerr << "VertexBuffer::EndAttrib() is running." << std::endl;
+
 		for (GLuint attribute_index = 0; attribute_index < m_total_attribute_count; ++attribute_index)
 		{
 			glEnableVertexAttribArray(attribute_index);
@@ -84,14 +90,16 @@ public:
 #endif
 		}
 
+		std::cerr << "VertexBuffer::EndAttrib() completed." << std::endl;
+
 		m_attribute_count.clear();
 		m_attribute_type.clear();
 		m_attribute_pointer.clear();
 
 #ifdef _DEBUG
-		const unsigned int attribute_size_count = m_attribute_count.size();
-		const unsigned int attribute_type_count = m_attribute_type.size();
-		const unsigned int attribute_pointer_count = m_attribute_pointer.size();
+		const size_t attribute_size_count = m_attribute_count.size();
+		const size_t attribute_type_count = m_attribute_type.size();
+		const size_t attribute_pointer_count = m_attribute_pointer.size();
 		assert(attribute_size_count == 0);
 		assert(attribute_type_count == 0);
 		assert(attribute_pointer_count == 0);
@@ -113,9 +121,9 @@ public:
 		++m_total_attribute_count;
 
 #ifdef _DEBUG
-		const int attribute_size_count = m_attribute_count.size();
-		const int attribute_type_count = m_attribute_type.size();
-		const int attribute_pointer_count = m_attribute_pointer.size();
+		const size_t attribute_size_count = m_attribute_count.size();
+		const size_t attribute_type_count = m_attribute_type.size();
+		const size_t attribute_pointer_count = m_attribute_pointer.size();
 		assert(attribute_size_count == m_total_attribute_count);
 		assert(attribute_size_count == attribute_type_count);
 		assert(attribute_size_count == attribute_pointer_count);
@@ -128,14 +136,14 @@ public:
 		glDeleteVertexArrays(1, &m_vertex_array_object);
 	}
 
-	inline GLint GetBufferSize() const
+	inline GLsizeiptr GetBufferSize() const
 	{
 		return m_buffer_size;
 	}
 
 	inline const std::string& GetBufferName() const
 	{
-		return m_buffer_name;
+		return Name;
 	}
 
 	inline void Bind() const
@@ -161,11 +169,13 @@ public:
 	}
 	*/
 
+	const std::string Name;
+	const GLenum Usage;
+
 private:
 
-	GLint m_buffer_size;
+	GLsizeiptr m_buffer_size;
 	GLuint m_vertex_buffer_object;
-	std::string m_buffer_name;
 
 	GLuint m_vertex_array_object;
 	GLsizei m_stride;
