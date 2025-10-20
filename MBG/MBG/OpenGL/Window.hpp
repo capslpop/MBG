@@ -11,7 +11,7 @@
 class Window
 {
 public:
-	Window(int width, int height);
+	Window(int width, int height, std::string window_name);
 
 	bool isClosed() const;
 	void pullAndSwapBuffers() const;
@@ -42,4 +42,5 @@ private:
 
 	int width_;
 	int height_;
+	std::string window_name_;
 };

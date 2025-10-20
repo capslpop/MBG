@@ -96,7 +96,7 @@ void Window::startOpenGLDebug()
 	int flags; glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
 	if (b_debug_output_supported)
 	{
-		std::cerr << "The extension for GL_DEBUG_OUTPUT is supported on this system." << std::endl;
+		std::cerr << "Window::startOpenGLDebug(): This system supports GL_ARB_debug_output." << std::endl;
 		
 		glEnable(GL_DEBUG_OUTPUT);
 		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS); // makes sure errors are displayed synchronously
@@ -104,18 +104,19 @@ void Window::startOpenGLDebug()
 		PFNGLDEBUGMESSAGECALLBACKARBPROC pfnGlDebugMessageCallbackARB = reinterpret_cast<PFNGLDEBUGMESSAGECALLBACKARBPROC>(glfwGetProcAddress("glDebugMessageCallbackARB"));
 		if (pfnGlDebugMessageCallbackARB == NULL)
 		{
-			std::cerr << "Failed to load pfnGlDebugMessageCallbackARB." << std::endl;
+			std::cerr << "Window::startOpenGLDebug(): Failed to load glDebugMessageCallbackARB." << std::endl;
 			return;
 		}
 		PFNGLDEBUGMESSAGECONTROLPROC pfnGlDebugMessageControlARB = reinterpret_cast<PFNGLDEBUGMESSAGECONTROLPROC>(glfwGetProcAddress("glDebugMessageControlARB"));
 		if (pfnGlDebugMessageControlARB == NULL)
 		{
-			std::cerr << "Failed to load pfnGlDebugMessageCallbackARB." << std::endl;
+			std::cerr << "Window::startOpenGLDebug(): Failed to load glDebugMessageControlARB." << std::endl;
 			return;
 		}
 		pfnGlDebugMessageCallbackARB(glDebugOutput, nullptr);
 		pfnGlDebugMessageControlARB(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
-		std::cerr << "Completed loading functions for OpenGL debug output." << std::endl;
+
+		std::cerr << "Window::startOpenGLDebug(): Completed loading functions for GL_ARB_debug_output." << std::endl;
 	}
 #endif
 }
@@ -137,7 +138,7 @@ void Window::framebuffer_size_callback(GLFWwindow* window, int width, int height
 }
 
 // create in window mode
-Window::Window(int width, int height) : width_(width), height_(height)
+Window::Window(int width, int height, std::string window_name = "Spaghetti On The Moon") : width_(width), height_(height), window_name_(window_name)
 {
 #ifdef _DEBUG
 	startGLFWDebug();
@@ -150,7 +151,7 @@ Window::Window(int width, int height) : width_(width), height_(height)
 
 	// glfw window creation
 	// --------------------
-	window = glfwCreateWindow(width, height, "Spaghetti On The Moon", NULL, NULL);
+	window = glfwCreateWindow(width, height, window_name_.c_str(), NULL, NULL);
 	if (window == NULL)
 	{
 		std::cout << "Failed to create GLFW window" << std::endl;
