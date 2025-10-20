@@ -33,8 +33,6 @@ public:
 		glDeleteBuffers(1, &m_element_buffer_object);
 	}
 
-	const std::string Name;
-
 private:
 	GLuint m_element_buffer_object;
 };
