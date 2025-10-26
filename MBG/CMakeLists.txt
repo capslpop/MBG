@@ -11,6 +11,11 @@ if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET MBG PROPERTY CXX_STANDARD 20)
 endif()
 
+# If we are in debug mode declate that
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    add_compile_definitions(_DEBUG)
+endif()
+
 find_package(imgui REQUIRED)
 target_link_libraries(MBG PRIVATE imgui::imgui)
 
