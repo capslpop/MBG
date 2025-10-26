@@ -40,12 +40,12 @@ Texture3D::Texture3D(const std::filesystem::path& tex_path, size_t size_x, size_
 	delete data[];
 }
 
-Texture3D::bind() {
+void Texture3D::bind() {
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_3D, texture_);
 }
 
-Texture3D::unbind() {
+void Texture3D::unbind() {
 	glBindTexture(GL_TEXTURE_3D, 0);
 }
 

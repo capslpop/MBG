@@ -9,8 +9,8 @@ class Texture3D {
 	public:
 		Texture3D(const std::filesystem::path& tex_path, size_t size_x, size_t size_y, size_t size_z, TEXTURE_TYPE type);
 
-		bind();
-		unbind();
+		void bind();
+		void unbind();
 
 		~Texture3D();
 
