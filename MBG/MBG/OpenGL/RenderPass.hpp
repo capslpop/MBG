@@ -1,8 +1,19 @@
 #pragma once
+#include <fstream>
+#include <iostream>
+#include <sstream>
+
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+
+#include "Texture2D.hpp"
+#include "VertexBuffer.hpp"
+#include "DoubleTexture2D.hpp"
+//#include "MBG.hpp"
 
 class RenderPass {
 public:
-	RenderPass();
+	RenderPass(std::string vertexPath, std::string fragmentPath, Texture2D frameBufferTexture, DoubleTexture2D doubleBufferTexture, VertexBuffer VB);
 	~RenderPass();
 
 	/*
@@ -28,21 +39,28 @@ public:
 	/*
 		Stores the memory's c++ object pointer
 	*/
-	void bindMemory(Vertices memory);
+	void bindMemory(VertexBuffer memory); // I'm assuming 'Vertices' became VertexBuffer at some point, so I'm changing this.
 
 	/*
 		This does the bulk of the operations in this class.
 
 		For each shader we need to
-		1.) Add the include files that are refrenced. We should use the shader files parent directory for the refrence point.
+		1.) Add the include files that are referenced. We should use the shader files parent directory for the reference point.
 		2.) Add the correct memory object definition and name
-			for example if we have a 2D texture with name "light_info" we should include it like this smapler2D light_info;
+			for example if we have a 2D texture with name "light_info" we should include it like this sampler2D light_info;
 		
 		Finally we need to link all of the objects into one object.
 	*/
-	link();
+	void link();
 
-private:
+protected:
+	std::string vertexFile;
+	std::string fragmentFile;
+	Texture2D frameBuffer;
+	DoubleTexture2D doubleBuffer;
+	VertexBuffer memory;
 
-
+	GLuint vertexShader;
+	GLuint fragmentShader;
+	GLuint shaderProgram;
 };
