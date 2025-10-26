@@ -9,7 +9,7 @@ public:
 	}
 
 	~Texture2D() {
-
+		   
 	}
 
 private:

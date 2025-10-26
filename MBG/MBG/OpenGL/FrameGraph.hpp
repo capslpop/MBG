@@ -1,23 +1,29 @@
 #pragma once
 
+#include <vector>
+
 #include "Nodes.hpp"
 
-class FramGraph
-{
+class FrameGraph {
+private:
+	enum NODE_TYPE {
+		NODE_MEMORY_READ,
+		NODE_MEMORY_WRITE,
+		NODE_DRAW,
+		NODE_MULTI_DRAW,
+	};
+
 public:
-	FramGraph();
-	~FramGraph();
+	FrameGraph();
+	~FrameGraph();
 
 	/*
 		These are all of the memory syncronization nodes
 	*/
-	addMemoryNode(NodeSend node);
-	addMemoryNode(NodeRead node);
-
-	/*
-		These are all of the rendering nodes
-	*/
-	addRenderPassNode(NodeRenderPass node);
+	void addNode(NodeMemoryRead node);
+	void addNode(NodeMemoryWrite node);
+	void addNode(NodeDraw node);
+	void addNode(NodeMultiDraw node);
 
 	/*
 		This is the most complex function of the entire project!
@@ -56,13 +62,7 @@ public:
 	void renderDebugInfo();
 
 private:
+	void threadSafePushToCommandBuffer(NODE_TYPE node_type, size_t byte_size, void* ptr); // This copies the current struct into the command buffer
 
+	std::vector<uint8_t> bytes;
 };
-
-FramGraph::FramGraph()
-{
-}
-
-FramGraph::~FramGraph()
-{
-}
