@@ -80,7 +80,7 @@ class DescriptorSet {
 		}
 
 		inline bool HasUniformDescriptors() const {
-			return false;
+			return m_uniform_descriptors.size() != 0;
 		}
 
 		inline const std::vector<UniformDescriptorSet>& GetUniformDescriptors() const {
