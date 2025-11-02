@@ -8,7 +8,7 @@ RenderPass::~RenderPass() {
 	glDeleteProgram(shaderProgram);
 }
 
-inline GLuint RenderPass::getProgram() const {
+inline GLuint RenderPass::getProgram() {
 	return shaderProgram;
 }
 

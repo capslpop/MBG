@@ -3,7 +3,7 @@
 // These are all of the texture color types which are exactly the same as the opengl types
 enum TEXTURE_TYPE {
 	R8,
-	R8_SNORM
+	R8_SNORM,
 	R16,
 	R16_SNORM,
 	RG8_SNORM,

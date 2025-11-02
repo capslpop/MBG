@@ -5,7 +5,6 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-
 //#include "MBG.hpp"
 
 class RenderPass {
@@ -21,7 +20,7 @@ public:
 	/*
 		Gets the shader program
 	*/
-	inline GLuint getProgram() const;
+	inline GLuint getProgram();
 
 
 	/*
