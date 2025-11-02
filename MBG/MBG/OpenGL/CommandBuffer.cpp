@@ -20,7 +20,6 @@ void CommandBuffer::logCommand(NodeMemory cmd) {
 
 void CommandBuffer::logCommand(NodeDraw cmd) {
 	CommandBuffer::commandOrder.push_back(NODE_DRAW);
-
 }
 
 void CommandBuffer::logCommand(NodeMultiDraw cmd) {
