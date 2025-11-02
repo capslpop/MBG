@@ -6,40 +6,23 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include "Texture2D.hpp"
-#include "VertexBuffer.hpp"
-#include "DoubleTexture2D.hpp"
 //#include "MBG.hpp"
 
 class RenderPass {
 public:
-	RenderPass(std::string vertexPath, std::string fragmentPath, Texture2D frameBufferTexture, DoubleTexture2D doubleBufferTexture, VertexBuffer VB);
+	RenderPass(std::string vertexPath, std::string fragmentPath);
+
 	~RenderPass();
 
-	/*
-		Stores the shader's file path
-	*/
-	void addVertexShader(std::string shader_file);
+	// Delete copy constructors
+	RenderPass(const RenderPass& other) = delete;
+	RenderPass& operator=(const RenderPass& other) = delete;
 
 	/*
-		Stores the shader's file path
+		Gets the shader program
 	*/
-	void addFragmentShader(std::string shader_file);
+	inline GLuint getProgram() const;
 
-	/*
-		Stores the texture that will be writen to
-	*/
-	void addFrameBuffer(Texture2D texture);
-
-	/*
-		Stores the double buffer textures frame
-	*/
-	void addDoubleBuffer(DoubleTexture2D texture);
-
-	/*
-		Stores the memory's c++ object pointer
-	*/
-	void bindMemory(VertexBuffer memory); // I'm assuming 'Vertices' became VertexBuffer at some point, so I'm changing this.
 
 	/*
 		This does the bulk of the operations in this class.
@@ -56,11 +39,5 @@ public:
 protected:
 	std::string vertexFile;
 	std::string fragmentFile;
-	Texture2D frameBuffer;
-	DoubleTexture2D doubleBuffer;
-	VertexBuffer memory;
-
-	GLuint vertexShader;
-	GLuint fragmentShader;
 	GLuint shaderProgram;
 };

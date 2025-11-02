@@ -1,33 +1,16 @@
 #include "RenderPass.hpp"
 
-RenderPass::RenderPass(std::string vertexPath, std::string fragmentPath, Texture2D frameBufferTexture, DoubleTexture2D doubleBufferTexture, VertexBuffer VB)
-	: vertexFile(vertexPath),
-	fragmentFile(fragmentPath),
-	frameBuffer(frameBufferTexture),
-	doubleBuffer(doubleBufferTexture),
-	memory(VB)
-{
-	/*fragmentShader = 0;
-	vertexShader = 0;
-	shaderProgram = 0;*/
+RenderPass::RenderPass(std::string vertexPath, std::string fragmentPathB) : vertexFile(vertexPath), fragmentFile(fragmentPath) {
+	link();
 }
 
 RenderPass::~RenderPass() {
-	glDeleteShader(vertexShader);
-	glDeleteShader(fragmentShader);
-	//keep this?
 	glDeleteProgram(shaderProgram);
 }
 
-void RenderPass::addVertexShader(std::string shader_file) { vertexFile = shader_file; }
-
-void RenderPass::addFragmentShader(std::string shader_file) { fragmentFile = shader_file; }
-
-void RenderPass::addFrameBuffer(Texture2D texture) { frameBuffer = texture; }
-
-void RenderPass::addDoubleBuffer(DoubleTexture2D texture) { doubleBuffer = texture; }
-
-void RenderPass::bindMemory(VertexBuffer memory) { memory = memory; }
+inline GLuint RenderPass::getProgram() const {
+	return shaderProgram;
+}
 
 void RenderPass::link() {
 	std::string vertexCode;
@@ -81,9 +64,6 @@ void RenderPass::link() {
 		std::cout << "Error compiling fragment shader:\n" << log << std::endl;
 	}
 
-	vertexShader = vertex;
-	fragmentShader = fragment;
-
 	//link shaders
 	GLuint newProgram = glCreateProgram();
 	if (shaderProgram == 0) {
@@ -99,4 +79,6 @@ void RenderPass::link() {
 		std::cout << "Error linking shaders\n" << log << std::endl;
 	}
 	shaderProgram = newProgram;
+	glDeleteShader(vertexShader);
+	glDeleteShader(fragmentShader);
 }
