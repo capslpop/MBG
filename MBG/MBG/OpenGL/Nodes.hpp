@@ -24,10 +24,15 @@ enum NODE_HINT {
 	NONE,
 };
 
-// Since a FrameGraph is inheriently defered so will be out memory transfors
+enum Commands {
+	NODE_MEMORY,
+	NODE_DRAW,
+	NODE_MULTI_DRAW
+};
+// Since a FrameGraph is inherently defered so will be out memory transfors
 // This means that data read or writen will happen once the FrameGraph's run command is executed
 template <typename T>
-struct NodeMemoryRead {
+struct NodeMemory {
 	T* GPU_Memory = nullptr;
 	F function = ;
 	std::string name = "MEMORY O";

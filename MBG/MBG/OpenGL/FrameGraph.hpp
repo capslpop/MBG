@@ -20,7 +20,7 @@ public:
 	/*
 		These are all of the memory syncronization nodes
 	*/
-	void addNode(NodeMemoryRead node);
+	void addNode(NodeMemory node);
 	void addNode(NodeMemoryWrite node);
 	void addNode(NodeDraw node);
 	void addNode(NodeMultiDraw node);
