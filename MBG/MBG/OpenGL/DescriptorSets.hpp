@@ -9,17 +9,32 @@
 
 class UniformDescriptorSet {
 	public:
-		inline void SetName(std::string name) { uniform_name = name; }
+		UniformDescriptorSet(std::string name, std::string type, uint8_t* val) {
+			assert(!name.empty() && type == "3f");
+			uniform_name = name;
+			uniform_type = type;
+			uniform_val = val;
+		}
+		inline void SetName(const std::string name) {
+			assert(!name.empty());
+			uniform_name = name;
+		}
 
-		inline void SetType(std::string type) { uniform_type = type; }
+		inline void SetType(const std::string type) {
+			assert(type == "3f"); 
+			uniform_type = type;
+		}
 
-		inline void SetVal(uint8_t* val) { uniform_val = val; }
+		inline void SetVal(const uint8_t* val) {
+			delete uniform_val;
+			uniform_val = new uint8_t(*val);// could use smart pointers, but I dont have experience with them, maybe someone else.
+		}
 
 		inline std::string GetName() { return uniform_name; }
 
 		inline std::string GetType() { return uniform_type; }
 
-		inline uint8_t* GetVal() { return uniform_val; }
+		inline const uint8_t* GetVal() { return uniform_val; }
 	private:
 		std::string uniform_name;
 		std::string uniform_type;
