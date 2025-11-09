@@ -29,6 +29,9 @@ public:
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
 
+	VertexElementBuffer(const VertexElementBuffer& other) = default;
+	VertexElementBuffer& operator=(const VertexElementBuffer& other) = default;
+
 	virtual ~VertexElementBuffer() override {
 		glDeleteBuffers(1, &m_element_buffer_object);
 	}
