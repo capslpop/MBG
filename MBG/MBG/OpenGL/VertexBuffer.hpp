@@ -126,6 +126,9 @@ public:
 #endif
 	}
 
+	VertexBuffer(const VertexBuffer& other) = default;
+	VertexBuffer& operator=(const VertexBuffer& other) = default;
+
 	virtual ~VertexBuffer()
 	{
 		glDeleteBuffers(1, &m_vertex_buffer_object);
