@@ -5,7 +5,7 @@
 find_package(Catch2 CONFIG REQUIRED)
 
 # Add source to this project's executable.
-add_executable (MBG "Tests/tests.cpp" "MBG/OpenGL/Window.cpp")
+add_executable (MBG "Tests/tests.cpp" "MBG/OpenGL/Window.cpp" "MBG/OpenGL/Texture3D.cpp")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET MBG PROPERTY CXX_STANDARD 20)

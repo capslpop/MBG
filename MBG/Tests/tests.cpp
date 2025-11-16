@@ -4,6 +4,7 @@
 #include "../MBG/OpenGL/Window.hpp"
 #include "../MBG/OpenGL/VertexBuffer.hpp"
 #include "../MBG/OpenGL/VertexElementBuffer.hpp"
+#include "../MBG/OpenGL/Texture3D.hpp"
 
 #define _CRT_SECURE_NO_WARNINGS
 #include <cstdio>
@@ -278,4 +279,116 @@ TEST_CASE("Simple Window") {
 	}
 
     REQUIRE(1 + 1 == 2);
+}
+
+TEST_CASE("Simple Texture") {
+
+	std::cout << "Hello Texture!" << std::endl;
+
+	Window example_window(800, 600, "3D Texture Test");
+
+	GLfloat vertices_triangle[] = {
+		// vertices			// colors		  // textures
+		-0.5, 0.5, 0.0,		1.0f, 0.0f, 0.0f, 0.0, 1.0,
+		0.5, 0.5, 0.0,		0.0f, 1.0f, 0.0f, 1.0, 1.0,
+		-0.5, -0.5, 0.0,	0.0f, 0.0f, 1.0f, 0.0, 0.0,
+		0.5, -0.5, 0.0,		0.8f, 0.6f, 0.4f, 1.0, 0.0
+	};
+
+	GLuint indices_triangle[] = {
+		0, 1, 2,
+		1, 2, 3
+	};
+
+	VertexElementBuffer triangle_element_buffer(vertices_triangle, sizeof(vertices_triangle), indices_triangle, sizeof(indices_triangle), "triangleEBO", GL_STATIC_DRAW);
+	triangle_element_buffer.BeginAttrib();
+	triangle_element_buffer.AddFloat(3);
+	triangle_element_buffer.AddFloat(3);
+	triangle_element_buffer.EndAttrib();
+	triangle_element_buffer.BeginAttrib();
+	triangle_element_buffer.AddFloat(3);
+	triangle_element_buffer.EndAttrib();
+	triangle_element_buffer.BeginAttrib();
+	triangle_element_buffer.AddFloat(3);
+	triangle_element_buffer.AddFloat(3);
+	triangle_element_buffer.EndAttrib();
+	triangle_element_buffer.BeginAttrib();
+	triangle_element_buffer.AddFloat(3);
+	triangle_element_buffer.EndAttrib();
+	triangle_element_buffer.BeginAttrib();
+	triangle_element_buffer.AddFloat(3);
+	triangle_element_buffer.AddFloat(3);
+	triangle_element_buffer.EndAttrib();
+
+	//Add 3 attributes: 3 floats for vertices, 3 floats for colors, 2 floats for textures
+	triangle_element_buffer.BeginAttrib();
+	triangle_element_buffer.AddFloat(3);
+	triangle_element_buffer.AddFloat(3);
+	triangle_element_buffer.AddFloat(2);
+	triangle_element_buffer.EndAttrib();
+
+	GLuint program_draw_triangle = get_shader_program_from_file("Shaders/vert_texture.glsl", "Shaders/frag_texture.glsl");
+	
+	// Generate 3D LUT for testing
+	
+	// Sets texture size (e.x. LUT_SIZE*LUT_SUZE*LUT_SIZE)
+	const int LUT_SIZE = 64;
+
+	// Create vector of floats (this makes the data type GL_FLOAT)
+	std::vector<float> lut(LUT_SIZE * LUT_SIZE * LUT_SIZE * 4);
+
+	// Generate each pixel
+	for (int b = 0; b < LUT_SIZE; ++b) {
+		for (int g = 0; g < LUT_SIZE; ++g) {
+			for (int r = 0; r < LUT_SIZE; ++r) {
+
+				float r_float = r / float(LUT_SIZE - 1);
+				float g_float = g / float(LUT_SIZE - 1);
+				float b_float = b / float(LUT_SIZE - 1);
+
+				int index = ((b * LUT_SIZE + g) * LUT_SIZE + r) * 4;
+
+				lut[index + 0] = r_float; // R
+				lut[index + 1] = g_float; // G
+				lut[index + 2] = b_float; // B
+				lut[index + 3] = 1.0;	 // A
+			}
+		}
+	}
+
+
+	TextureParams params(LUT_SIZE, LUT_SIZE, LUT_SIZE, TEXTURE_TYPE::RGBA16F, GL_FLOAT);
+
+	Texture3D test_texture_data(params);
+
+	glTexSubImage3D(GL_TEXTURE_3D, 0, 0, 0, 0, LUT_SIZE, LUT_SIZE, LUT_SIZE, GL_RGBA, GL_FLOAT, lut.data());
+
+
+	glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+
+	while (!example_window.isClosed())
+	{
+		//Get changing sin^2(x) using time
+		float sin_sq_time = sin((float)glfwGetTime()) * sin((float)glfwGetTime());
+
+		if (glfwGetKey(example_window.window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+		{
+			glfwSetWindowShouldClose(example_window.window, GLFW_TRUE);
+		}
+
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		glUseProgram(program_draw_triangle);
+
+		//Add uniform to program
+		glUniform1i(glGetUniformLocation(program_draw_triangle, "test_texture_data"), 0);
+		glUniform1f(glGetUniformLocation(program_draw_triangle, "sin_sq_time"), sin_sq_time);
+		triangle_element_buffer.Bind();
+		
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+
+		example_window.pullAndSwapBuffers();
+	}
+
+	REQUIRE(1 + 1 == 2);
 }
