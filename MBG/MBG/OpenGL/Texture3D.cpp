@@ -1,6 +1,6 @@
 #include "Texture3D.hpp"
 
-//Mapping is here for now
+// Mapping is here for now
 std::map<TEXTURE_TYPE, std::pair<GLint, GLenum>> tex_type_map{
 	{R8, {GL_R8, GL_RED}},
 	{R8_SNORM, {GL_R8_SNORM, GL_RED}},
@@ -64,9 +64,7 @@ std::map<TEXTURE_TYPE, std::pair<GLint, GLenum>> tex_type_map{
 	{RGBA32UI, {GL_RGBA32UI, GL_RGBA}},
 };
 
-//TODO: Set texture parameter function?
-
-//Load Texture3D with data provided
+// Load Texture3D with data provided
 Texture3D::Texture3D(const std::filesystem::path& tex_path, TextureParams params)
 	: texture_(0)
 	, width_(params.size_x)
@@ -76,7 +74,7 @@ Texture3D::Texture3D(const std::filesystem::path& tex_path, TextureParams params
 	, data_type_(params.data_type)
 {
 
-	//Load glDebugMessageInsertARB
+	// Load glDebugMessageInsertARB
 	PFNGLDEBUGMESSAGEINSERTPROC pfnGlDebugMessageInsertARB = reinterpret_cast<PFNGLDEBUGMESSAGEINSERTPROC>(glfwGetProcAddress("glDebugMessageInsertARB"));
 	if (pfnGlDebugMessageInsertARB == NULL)
 	{
@@ -84,18 +82,18 @@ Texture3D::Texture3D(const std::filesystem::path& tex_path, TextureParams params
 		return;
 	}
 
-	//Generate and bind texture
+	// Generate and bind texture
 	glGenTextures(1, &texture_);
 	glBindTexture(GL_TEXTURE_3D, texture_);
 
-	//Set default texture parameters
+	// Set default texture parameters
 	glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
 	glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
 	glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_BORDER);
 
-	//Create texture
+	// Create texture
 	std::ifstream stream(tex_path, std::ios::binary);
 
 	if (!stream) {
@@ -107,7 +105,7 @@ Texture3D::Texture3D(const std::filesystem::path& tex_path, TextureParams params
 			"Texture3D: Texture File loaded successfully");
 	}
 
-	//Read stream into data buffer
+	// Read stream into data buffer
 	uintmax_t file_length = std::filesystem::file_size(tex_path);
 
 	std::cout << file_length << std::endl;
@@ -124,7 +122,7 @@ Texture3D::Texture3D(const std::filesystem::path& tex_path, TextureParams params
 	delete[] data;
 }
 
-//Load Texture3D with no data
+// Load Texture3D with no data
 Texture3D::Texture3D(TextureParams params)
 	: texture_(0)
 	, width_(params.size_x)
@@ -134,7 +132,7 @@ Texture3D::Texture3D(TextureParams params)
 	, data_type_(params.data_type)
 {
 
-	//Load glDebugMessageInsertARB
+	// Load glDebugMessageInsertARB
 	PFNGLDEBUGMESSAGEINSERTPROC pfnGlDebugMessageInsertARB = reinterpret_cast<PFNGLDEBUGMESSAGEINSERTPROC>(glfwGetProcAddress("glDebugMessageInsertARB"));
 	if (pfnGlDebugMessageInsertARB == NULL)
 	{
@@ -142,11 +140,11 @@ Texture3D::Texture3D(TextureParams params)
 		return;
 	}
 
-	//Generate and bind texture
+	// Generate and bind texture
 	glGenTextures(1, &texture_);
 	glBindTexture(GL_TEXTURE_3D, texture_);
 
-	//Set default texture parameters
+	// Set default texture parameters
 	glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
@@ -170,6 +168,26 @@ void Texture3D::bind(GLint slot) {
 
 void Texture3D::unbind() {
 	glBindTexture(GL_TEXTURE_3D, 0);
+}
+
+void Texture3D::set_param(GLenum pname, GLfloat param) {
+	glTexParameterf(GL_TEXTURE_3D, pname, param);
+}
+
+void Texture3D::set_param(GLenum pname, GLint param) {
+	glTexParameteri(GL_TEXTURE_3D, pname, param);
+}
+
+void Texture3D::set_param(GLenum pname, const GLfloat* params) {
+	glTexParameterfv(GL_TEXTURE_3D, pname, params);
+}
+
+void Texture3D::set_param(GLenum pname, const GLint* params) {
+	glTexParameteriv(GL_TEXTURE_3D, pname, params);
+}
+
+void Texture3D::set_param(GLenum pname, const GLuint* params) {
+	glTexParameterIuiv(GL_TEXTURE_3D, pname, params);
 }
 
 Texture3D::~Texture3D() {

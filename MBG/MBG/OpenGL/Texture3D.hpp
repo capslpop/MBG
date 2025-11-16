@@ -16,6 +16,12 @@ class Texture3D {
 		void bind(GLint slot);
 		void unbind();
 
+		void set_param(GLenum pname, GLfloat param);
+		void set_param(GLenum pname, GLint param);
+		void set_param(GLenum pname, const GLfloat* params);
+		void set_param(GLenum pname, const GLint* params);
+		void set_param(GLenum pname, const GLuint* params);
+
 		~Texture3D();
 
 	private:

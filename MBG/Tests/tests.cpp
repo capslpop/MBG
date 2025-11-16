@@ -301,24 +301,6 @@ TEST_CASE("Simple Texture") {
 	};
 
 	VertexElementBuffer triangle_element_buffer(vertices_triangle, sizeof(vertices_triangle), indices_triangle, sizeof(indices_triangle), "triangleEBO", GL_STATIC_DRAW);
-	triangle_element_buffer.BeginAttrib();
-	triangle_element_buffer.AddFloat(3);
-	triangle_element_buffer.AddFloat(3);
-	triangle_element_buffer.EndAttrib();
-	triangle_element_buffer.BeginAttrib();
-	triangle_element_buffer.AddFloat(3);
-	triangle_element_buffer.EndAttrib();
-	triangle_element_buffer.BeginAttrib();
-	triangle_element_buffer.AddFloat(3);
-	triangle_element_buffer.AddFloat(3);
-	triangle_element_buffer.EndAttrib();
-	triangle_element_buffer.BeginAttrib();
-	triangle_element_buffer.AddFloat(3);
-	triangle_element_buffer.EndAttrib();
-	triangle_element_buffer.BeginAttrib();
-	triangle_element_buffer.AddFloat(3);
-	triangle_element_buffer.AddFloat(3);
-	triangle_element_buffer.EndAttrib();
 
 	//Add 3 attributes: 3 floats for vertices, 3 floats for colors, 2 floats for textures
 	triangle_element_buffer.BeginAttrib();
@@ -329,8 +311,7 @@ TEST_CASE("Simple Texture") {
 
 	GLuint program_draw_triangle = get_shader_program_from_file("Shaders/vert_3dtexture.glsl", "Shaders/frag_3dtexture.glsl");
 	
-	// Generate 3D LUT for testing
-	
+	// Generate 3D LUT for testing	
 	// Sets texture size (e.x. LUT_SIZE*LUT_SUZE*LUT_SIZE)
 	const int LUT_SIZE = 64;
 
@@ -359,16 +340,28 @@ TEST_CASE("Simple Texture") {
 
 	TextureParams params(LUT_SIZE, LUT_SIZE, LUT_SIZE, TEXTURE_TYPE::RGBA16F, GL_FLOAT);
 
+	params.wrap_s = GL_CLAMP_TO_EDGE;
+	params.wrap_t = GL_CLAMP_TO_EDGE;
+	params.wrap_r = GL_CLAMP_TO_EDGE;
+
 	Texture3D test_texture_data(params);
 
 	glTexSubImage3D(GL_TEXTURE_3D, 0, 0, 0, 0, LUT_SIZE, LUT_SIZE, LUT_SIZE, GL_RGBA, GL_FLOAT, lut.data());
+
+	// Test parameter changing
+	test_texture_data.set_param(GL_TEXTURE_WRAP_S, params.wrap_s);
+	test_texture_data.set_param(GL_TEXTURE_WRAP_T, params.wrap_t);
+	test_texture_data.set_param(GL_TEXTURE_WRAP_R, params.wrap_r);
+
+	GLfloat border_color[] = {1.0, 0.0, 0.0, 1.0};
+	test_texture_data.set_param(GL_TEXTURE_BORDER_COLOR, border_color);
 
 
 	glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 
 	while (!example_window.isClosed())
 	{
-		//Get changing sin^2(x) using time
+		//Get changing [0.0, 1.0] oscillation using time
 		float sin_sq_time = sin((float)glfwGetTime()) * sin((float)glfwGetTime());
 
 		if (glfwGetKey(example_window.window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
