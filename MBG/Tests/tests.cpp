@@ -327,7 +327,7 @@ TEST_CASE("Simple Texture") {
 	triangle_element_buffer.AddFloat(2);
 	triangle_element_buffer.EndAttrib();
 
-	GLuint program_draw_triangle = get_shader_program_from_file("Shaders/vert_texture.glsl", "Shaders/frag_texture.glsl");
+	GLuint program_draw_triangle = get_shader_program_from_file("Shaders/vert_3dtexture.glsl", "Shaders/frag_3dtexture.glsl");
 	
 	// Generate 3D LUT for testing
 	
