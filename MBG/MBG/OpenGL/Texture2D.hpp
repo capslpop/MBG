@@ -24,42 +24,42 @@ public:
 		bool mipmap_en;
 	};
 
-	Texture2D(Texture2DArgs input): type_(tex_type_map[input.image.type].second) {
+	Texture2D(Texture2DArgs input) {
 		glGenTextures(1, &ID);
 		setParameters(input.params);
 
-		if (input.image.data) glTexImage2D(type_, 0, tex_type_map[input.image.type].first, 
-										   input.image.size_x, input.image.size_x, 0, 
-										   tex_type_map[input.image.type].first, 
-										   GL_UNSIGNED_BYTE, input.image.data);
-		if (input.mipmap_en) glGenerateMipmap(type_);
+		if (input.image.data) glTexImage2D(GL_TEXTURE_2D, 0, tex_type_map[input.image.type].second,
+			input.image.size_x, input.image.size_x, 0,
+			tex_type_map[input.image.type].second,
+			GL_UNSIGNED_BYTE, input.image.data);
+		if (input.mipmap_en) glGenerateMipmap(GL_TEXTURE_2D);
 	}
 
 	void setParameters(Texture2DParameters input) {
-		glBindTexture(type_, ID);
+		glBindTexture(GL_TEXTURE_2D, ID);
 
-		glTexParameteri(type_, GL_TEXTURE_WRAP_S, input.wrap_s);
-		glTexParameteri(type_, GL_TEXTURE_WRAP_T, input.wrap_t);
-		glTexParameteri(type_, GL_TEXTURE_MIN_FILTER, input.min_filter);
-		glTexParameteri(type_, GL_TEXTURE_MAG_FILTER, input.mag_filter);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, input.wrap_s);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, input.wrap_t);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, input.min_filter);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, input.mag_filter);
 	}
 
 	void setImage(Texture2DImage input) {
-		glBindTexture(type_, ID);
+		glBindTexture(GL_TEXTURE_2D, ID);
 
-		if (input.data) glTexImage2D(type_, 0, tex_type_map[input.type].first, 
-									 input.size_x, input.size_y, 0, 
-									 tex_type_map[input.type].first, 
-									 GL_UNSIGNED_BYTE, input.data);
+		if (input.data) glTexImage2D(GL_TEXTURE_2D, 0, tex_type_map[input.type].first,
+			input.size_x, input.size_y, 0,
+			tex_type_map[input.type].first,
+			GL_UNSIGNED_BYTE, input.data);
 	}
 
 	void bind(int slot) {
 		glActiveTexture(GL_TEXTURE0 + slot);
-		glBindTexture(type_, ID);
+		glBindTexture(GL_TEXTURE_2D, ID);
 	}
 
 	void unbind() {
-		glBindTexture(type_, 0);
+		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
 	~Texture2D() {
@@ -70,6 +70,4 @@ public:
 
 private:
 	unsigned int ID;
-	GLenum type_;
-	GLint color_type_;
 };
