@@ -47,9 +47,9 @@ public:
 	void setImage(Texture2DImage input) {
 		glBindTexture(GL_TEXTURE_2D, ID);
 
-		if (input.data) glTexImage2D(GL_TEXTURE_2D, 0, tex_type_map[input.type].first,
+		if (input.data) glTexImage2D(GL_TEXTURE_2D, 0, tex_type_map[input.type].second,
 			input.size_x, input.size_y, 0,
-			tex_type_map[input.type].first,
+			tex_type_map[input.type].second,
 			GL_UNSIGNED_BYTE, input.data);
 	}
 
