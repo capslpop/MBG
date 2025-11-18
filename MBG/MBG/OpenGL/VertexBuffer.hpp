@@ -41,10 +41,6 @@ public:
 		assert(m_vertex_array_object != 0);
 	}
 
-	VertexBuffer(const VertexBuffer& other) = delete;
-
-	VertexBuffer& operator=(const VertexBuffer& other) = delete;
-
 	void BeginAttrib()
 	{
 		assert(m_vertex_array_object != 0);
@@ -130,6 +126,9 @@ public:
 #endif
 	}
 
+	VertexBuffer(const VertexBuffer& other) = default;
+	VertexBuffer& operator=(const VertexBuffer& other) = default;
+
 	virtual ~VertexBuffer()
 	{
 		glDeleteBuffers(1, &m_vertex_buffer_object);
@@ -173,7 +172,7 @@ protected:
 	GLuint m_vertex_array_object;
 	GLsizei m_stride;
 
-	const GLenum m_usage;
+	GLenum m_usage;
 
 	GLuint m_total_attribute_count;
 	std::vector<GLint> m_attribute_count;
