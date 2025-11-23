@@ -1,43 +1,51 @@
 #pragma once
-#include <fstream>
-#include <iostream>
-#include <sstream>
 
 #include <glad/glad.h>
-#include <GLFW/glfw3.h>
-//#include "MBG.hpp"
 
-class RenderPass
-{
+#include <string>
+#include "FrameGraph.hpp"
+
+//------------------------------------------------------------
+// RENDER PASS
+//  Place these headers where you want to identify your shader code's type
+//  #shader VERTEX
+//  #shader GEOMETRY
+//  #shader TESSELLATION_CONTROL
+//  #shader TESSELLATION_EVALUATION
+//  #shader FRAGMENT
+//------------------------------------------------------------
+
+namespace MBG {
+
+class RenderPass {
 public:
-	RenderPass(std::string vertexPath, std::string fragmentPath);
-
+	RenderPass(const std::string& shader_file); 
 	~RenderPass();
 
-	// Delete copy constructors
-	RenderPass(const RenderPass& other) = delete;
-	RenderPass& operator=(const RenderPass& other) = delete;
-
-	/*
-		Gets the shader program
-	*/
-	inline GLuint getProgram();
-
-
-	/*
-		This does the bulk of the operations in this class.
-
-		For each shader we need to
-		1.) Add the include files that are referenced. We should use the shader files parent directory for the reference point.
-		2.) Add the correct memory object definition and name
-			for example if we have a 2D texture with name "light_info" we should include it like this sampler2D light_info;
-
-		Finally we need to link all of the objects into one object.
-	*/
-	void link();
-
 protected:
-	std::string vertexFile;
-	std::string fragmentFile;
-	GLuint shaderProgram;
+	GLuint shader_program_;
+
+	friend class FrameGraph;
+private:
+	enum class SHADER_TYPE {
+		NONE = -1,
+		VERTEX = 0,
+		TESSELLATION_CONTROL = 1,
+		TESSELLATION_EVALUATION = 2,
+		GEOMETRY = 3,
+		FRAGMENT = 4,
+	};
+
+	struct ShaderBlock {
+		std::string vertex_code;
+		std::string tessellation_control_code;
+		std::string tessellation_evaluation_code;
+		std::string geometry_code;
+		std::string fragment_code;
+	};
+
+	ShaderBlock getShaderBlocks(const std::string& shader_file);
+	GLuint buildShader(const std::string& shader_code, GLenum shader_type);
 };
+
+}

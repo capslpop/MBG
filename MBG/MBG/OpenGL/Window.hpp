@@ -8,20 +8,23 @@
 #include <GL/glext.h>
 #include <iostream>
 
+#include "FrameGraph.hpp"
+
+namespace MBG {
+
 class Window
 {
 public:
 	Window(int width, int height, std::string window_name);
 
 	bool isClosed() const;
-	void pullAndSwapBuffers() const;
 
 	inline int getWidth() const { return width_; };
 	inline int getHeight() const { return height_; };
 
-	~Window();
+	inline GLFWwindow* getWindow() const { return window; };
 
-	GLFWwindow* window;
+	~Window();
 
 private:
 	static void framebuffer_size_callback_static(GLFWwindow* window, int width, int height);
@@ -43,4 +46,7 @@ private:
 	int width_;
 	int height_;
 	std::string window_name_;
+	GLFWwindow* window;
 };
+
+}

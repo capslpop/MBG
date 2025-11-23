@@ -1,5 +1,7 @@
 #include "Window.hpp"
 
+namespace MBG {
+
 void APIENTRY Window::glDebugOutput(GLenum source,
 	GLenum type,
 	unsigned int id,
@@ -96,7 +98,7 @@ void Window::startOpenGLDebug()
 	int flags; glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
 	if (b_debug_output_supported)
 	{
-		std::cerr << "Window::startOpenGLDebug(): This system supports GL_ARB_debug_output." << std::endl;
+		//std::cerr << "Window::startOpenGLDebug(): This system supports GL_ARB_debug_output." << std::endl;
 		
 		glEnable(GL_DEBUG_OUTPUT);
 		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS); // makes sure errors are displayed synchronously
@@ -116,7 +118,7 @@ void Window::startOpenGLDebug()
 		pfnGlDebugMessageCallbackARB(glDebugOutput, nullptr);
 		pfnGlDebugMessageControlARB(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
 
-		std::cerr << "Window::startOpenGLDebug(): Completed loading functions for GL_ARB_debug_output." << std::endl;
+		//std::cerr << "Window::startOpenGLDebug(): Completed loading functions for GL_ARB_debug_output." << std::endl;
 	}
 #endif
 }
@@ -138,7 +140,7 @@ void Window::framebuffer_size_callback(GLFWwindow* window, int width, int height
 }
 
 // create in window mode
-Window::Window(int width, int height, std::string window_name = "Spaghetti On The Moon") : width_(width), height_(height), window_name_(window_name)
+Window::Window(int width, int height, std::string window_name = "Unnamed") : width_(width), height_(height), window_name_(window_name)
 {
 #ifdef _DEBUG
 	startGLFWDebug();
@@ -184,13 +186,10 @@ bool Window::isClosed() const
 	return glfwWindowShouldClose(window);
 }
 
-void Window::pullAndSwapBuffers() const
-{
-	glfwPollEvents();
-	glfwSwapBuffers(window);
-}
-
 Window::~Window()
 {
+	// TODO: delete window??
 	glfwTerminate();
+}
+
 }
